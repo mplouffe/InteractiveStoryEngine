@@ -18,6 +18,8 @@ public class Actor : MonoBehaviour
 
     [SerializeField] private List<Repertoire> m_actorRange;
 
+    [SerializeField] private float m_height;
+
     private Dictionary<Emotion, Sprite> m_actorRangeDictionary;
 
     private ActorState m_actorState;
@@ -25,8 +27,9 @@ public class Actor : MonoBehaviour
 
     private bool m_markHit = true;
     private Vector3 m_mark;
-    private float m_moveDuration;
-    private float m_movementStart;
+    private Vector3 m_startingPosition;
+    private float m_moveTotalDuration;
+    private float m_movementDuration;
 
     private void Awake()
     {
@@ -41,16 +44,16 @@ public class Actor : MonoBehaviour
     {
         if (!m_markHit)
         {
-            float moveDuration = Time.time - m_movementStart;
-            if (moveDuration >= m_moveDuration)
+            m_movementDuration += Time.deltaTime;
+            if (m_movementDuration >= m_moveTotalDuration)
             {
                 transform.position = m_mark;
                 m_markHit = true;
             }
             else
             {
-                var t = moveDuration / m_moveDuration;
-                Vector3 currentPosition = Vector3.Lerp(transform.position, m_mark, t);
+                var t = m_movementDuration / m_moveTotalDuration;
+                Vector3 currentPosition = Vector3.Lerp(m_startingPosition, m_mark, t);
                 transform.position = currentPosition;
             }
         }
@@ -103,9 +106,10 @@ public class Actor : MonoBehaviour
 
     public  void HitMark(Vector3 mark, float moveDuration)
     {
-        m_mark = mark;
-        m_moveDuration = moveDuration;
-        m_movementStart = Time.time;
+        m_startingPosition = transform.position;
+        m_mark = new Vector3(mark.x, m_height, mark.z);
+        m_moveTotalDuration = moveDuration;
+        m_movementDuration = 0;
         m_markHit = false;
     }
 }

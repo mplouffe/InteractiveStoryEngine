@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Actors
+    uniqueID: 3098381091
+    locked: 0
+  - name: Backdrop
+    uniqueID: 295885283
+    locked: 0
